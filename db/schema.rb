@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_14_200509) do
+ActiveRecord::Schema.define(version: 2018_10_14_202957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "permission_assignments", force: :cascade do |t|
+    t.bigint "permission_id"
+    t.bigint "role_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_id"], name: "index_permission_assignments_on_permission_id"
+    t.index ["role_id"], name: "index_permission_assignments_on_role_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.string "resource"
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource", "action"], name: "index_permissions_on_resource_and_action", unique: true
+    t.index ["resource"], name: "index_permissions_on_resource"
+  end
 
   create_table "role_assignments", force: :cascade do |t|
     t.bigint "user_id"
@@ -48,6 +66,8 @@ ActiveRecord::Schema.define(version: 2018_10_14_200509) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "permission_assignments", "permissions"
+  add_foreign_key "permission_assignments", "roles"
   add_foreign_key "role_assignments", "roles"
   add_foreign_key "role_assignments", "users"
 end
