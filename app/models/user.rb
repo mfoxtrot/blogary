@@ -6,4 +6,7 @@ class User < ApplicationRecord
 
   has_many :role_assignments, dependent: :destroy
   has_many :roles, through: :role_assignments
+
+  has_many :permission_assignments, through: :roles
+  has_many :permissions, through: :permission_assignments
 end
